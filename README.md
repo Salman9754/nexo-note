@@ -1,1 +1,2 @@
-# nexo-note
+# Nexo Notes
+
