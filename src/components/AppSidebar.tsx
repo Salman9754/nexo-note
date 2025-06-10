@@ -1,69 +1,99 @@
 "use client"
 
 import {
-    Sidebar,
-    SidebarContent,
-    SidebarGroup,
-    SidebarGroupLabel,
-    SidebarGroupContent,
-} from "@/components/ui/sidebar"
-import Link from "next/link"
-import { useUser } from "@/context/UserContext"
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarGroupContent,
+} from "@/components/ui/sidebar";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Menu } from "lucide-react";
+import { useState } from "react";
+import { useUser } from "@/context/UserContext";
+import { useNote } from "@/context/NoteSelectContext";
 
 export function AppSidebar() {
-    const { user, loading } = useUser()
+  const { setSelectedNote, newNote } = useNote()
+  const { user, loading } = useUser();
+  const [open, setOpen] = useState(false);
+  const { notes } = useUser()
 
-    type Note = {
-        note: string
-    }
+  const sidebarContent = (
+    <SidebarContent className="custom-scrollbar">
+      <SidebarGroup>
+        <SidebarGroupLabel className="mb-6 text-lg mt-8">
+          {loading ? (
+            "Loading your notes..."
+          ) : user ? (
+            "Your Notes"
+          ) : (
+            <p>
+              <Link href="/login" className="underline">
+                Login
+              </Link>{" "}
+              to see your notes
+            </p>
+          )}
+        </SidebarGroupLabel>
 
-    const notes: Note[] = [
-        {
-            note: "Hello this is note",
-        },
-    ]
-
-    return (
-<Sidebar>
-  <SidebarContent className="custom-scrollbar">
-    <SidebarGroup>
-      <SidebarGroupLabel className="mb-2 text-lg mt-8">
-        {loading ? (
-          "Loading your notes..."
-        ) : user ? (
-          "Your Notes"
-        ) : (
-          <p>
-            <Link href="/login" className="underline">
-              Login
-            </Link>{" "}
-            to see your notes
-          </p>
-        )}
-      </SidebarGroupLabel>
-
-      {loading && (
-        <SidebarGroupContent>
-          <div className="flex flex-col gap-2">
-            <div className="h-6 w-full rounded bg-muted animate-pulse" />
-            <div className="h-6 w-full rounded bg-muted animate-pulse" />
-            <div className="h-6 w-3/4 rounded bg-muted animate-pulse" />
-          </div>
-        </SidebarGroupContent>
-      )}
-
-      {!loading && user && (
-        <SidebarGroupContent>
-          {notes.map((n, i) => (
-            <div key={i} className="p-2 text-sm hover:bg-muted rounded">
-              {n.note}
+        {loading && (
+          <SidebarGroupContent>
+            <div className="flex flex-col gap-2">
+              <div className="h-6 w-full rounded bg-muted animate-pulse" />
+              <div className="h-6 w-full rounded bg-muted animate-pulse" />
+              <div className="h-6 w-3/4 rounded bg-muted animate-pulse" />
             </div>
-          ))}
-        </SidebarGroupContent>
-      )}
-    </SidebarGroup>
-  </SidebarContent>
-</Sidebar>
+          </SidebarGroupContent>
+        )}
 
-    )
+        {!loading && user && (
+          <SidebarGroupContent>
+            <Button
+              onClick={newNote}
+              className="w-full mb-4"
+              variant="outline"
+            >
+              New Note  +
+            </Button>
+            {notes.map((n, i) => (
+              <div
+                key={i}
+                onClick={() => setSelectedNote({ id: n.id, title: n.title, text: n.note })}
+                className="p-2 text-sm hover:bg-muted rounded cursor-pointer"
+              >
+                {n.title}
+              </div>
+            ))}
+          </SidebarGroupContent>
+        )}
+      </SidebarGroup>
+    </SidebarContent>
+  );
+
+  return (
+    <>
+      {/* Mobile: Sheet Toggle Button */}
+      <div className="md:hidden fixed top-2 left-2 z-50">
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Menu />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-0 w-64">
+            {sidebarContent}
+
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      {/* Desktop Sidebar */}
+      <div className="hidden md:flex w-64 h-screen border-r">
+        <Sidebar>{sidebarContent}</Sidebar>
+      </div>
+    </>
+  );
 }

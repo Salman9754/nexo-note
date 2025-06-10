@@ -6,7 +6,7 @@ import Header from '@/components/Header';
 import { UserProvider } from '@/context/UserContext';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/AppSidebar';
-
+import { NoteProvider } from '@/context/NoteSelectContext';
 
 
 export const metadata: Metadata = {
@@ -32,16 +32,18 @@ export default function RootLayout({
 
         >
           <UserProvider>
-            <SidebarProvider>
-              <AppSidebar />
+            <NoteProvider>
+              <SidebarProvider>
+                <AppSidebar />
 
-              <div className='min-h-screen w-full flex flex-col'><Header />
-                <main className='flex flex-1 px-4 pt-10 flex-col xl:px-8'>
-                  {children}
+                <div className='min-h-screen w-full flex flex-col'><Header />
+                  <main className='flex flex-1 px-4 pt-10 flex-col xl:px-8'>
+                    {children}
 
-                </main>
-              </div>
-            </SidebarProvider>
+                  </main>
+                </div>
+              </SidebarProvider>
+            </NoteProvider>
           </UserProvider>
 
           <Toaster />
