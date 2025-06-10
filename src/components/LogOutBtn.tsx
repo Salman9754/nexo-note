@@ -1,12 +1,16 @@
 "use client"
 import React, { useState } from 'react'
 import { Button } from './ui/button'
-import { LoaderIcon } from 'lucide-react'
+import { LoaderIcon, LogOut } from 'lucide-react'
 import { toast } from 'sonner'
 import supabase from '@/supabase/client'
 import { useRouter } from "next/navigation"
 
-const LogOutBtn = () => {
+interface LogOutBtnProps {
+    isMobile?: boolean; // Optional prop to indicate mobile context
+}
+
+const LogOutBtn = ({ isMobile = false }: LogOutBtnProps) => {
     const router = useRouter()
     const [loading, setloading] = useState(false)
     const handleLogout = async () => {
@@ -27,9 +31,28 @@ const LogOutBtn = () => {
         }
     }
 
-    return (
-        <Button onClick={handleLogout} disabled={loading} className='w-full' variant={'outline'}>{loading ? <LoaderIcon className='animate-spin' /> : 'Log Out'}</Button>
-    )
-}
+    return isMobile ? (
+        <Button
+            onClick={handleLogout}
+            disabled={loading}
+            variant="outline"
+            size="icon"
+            className="h-10 w-10" // Explicit size for consistency
+            aria-label="Log Out"
+        >
+            {loading ? <LoaderIcon className="animate-spin h-5 w-5" /> : <LogOut className="h-5 w-5" />}
+        </Button>
+    ) : (
+        <Button
+            onClick={handleLogout}
+            disabled={loading}
+            variant="outline"
+            className="w-full"
+        >
+            {loading ? <LoaderIcon className="animate-spin" /> : "Log Out"}
+        </Button>
+    );
+};
+
 
 export default LogOutBtn

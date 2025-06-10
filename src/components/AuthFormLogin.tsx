@@ -44,7 +44,7 @@ function AuthFormLogin() {
             })
             if (error) throw error
             if (data) {
-                router.replace('/')
+                router.push('/')
                 getUser()
             }
         } catch (error) {

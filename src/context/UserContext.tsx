@@ -9,6 +9,7 @@ type UserContextType = {
   notes: Note[]
   loading: boolean;
   getUser: () => void;
+  setNotes: (notes: Note[]) => void;
 };
 
 type Note = {
@@ -25,6 +26,7 @@ const UserContext = createContext<UserContextType>({
   loading: true,
   notes: [],
   getUser: () => { },
+  setNotes: () => { },
 });
 
 
@@ -64,6 +66,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
     const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
+      if (!session?.user) setNotes([]);
     });
 
     return () => {
@@ -72,7 +75,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, loading, getUser, notes }}>
+    <UserContext.Provider value={{ user, loading, getUser, notes, setNotes }}>
       {children}
     </UserContext.Provider>
   );
