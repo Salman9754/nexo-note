@@ -7,19 +7,22 @@ import {
   SidebarGroupLabel,
   SidebarGroupContent,
 } from "@/components/ui/sidebar";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Menu } from "lucide-react";
+import { LoaderIcon, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useUser } from "@/context/UserContext";
 import { useNote } from "@/context/NoteSelectContext";
+import LogOutBtn from "./LogOutBtn";
+
+
 
 export function AppSidebar() {
   const { setSelectedNote, newNote } = useNote()
   const { user, loading } = useUser();
   const [open, setOpen] = useState(false);
-  const { notes } = useUser()
+  const { notes, loading: newLoading } = useUser()
 
   const sidebarContent = (
     <SidebarContent className="custom-scrollbar">
@@ -52,21 +55,32 @@ export function AppSidebar() {
         {!loading && user && (
           <SidebarGroupContent>
             <Button
-              onClick={newNote}
+              onClick={() => {
+                newNote()
+                setOpen(false)
+
+              }}
               className="w-full mb-4"
               variant="outline"
             >
               New Note  +
             </Button>
-            {notes.map((n, i) => (
-              <div
-                key={i}
-                onClick={() => setSelectedNote({ id: n.id, title: n.title, text: n.note })}
-                className="p-2 text-sm hover:bg-muted rounded cursor-pointer"
-              >
-                {n.title}
-              </div>
-            ))}
+            {newLoading ? (
+              <LoaderIcon className="animate-spin" />
+            ) : (
+              notes.map((n, i) => (
+                <div
+                  key={i}
+                  onClick={() => {
+                    setOpen(false)
+                    setSelectedNote({ id: n.id, title: n.title, text: n.note })
+                  }}
+                  className="p-2 text-sm hover:bg-muted rounded cursor-pointer"
+                >
+                  {n.title}
+                </div>
+              ))
+            )}
           </SidebarGroupContent>
         )}
       </SidebarGroup>
@@ -76,17 +90,26 @@ export function AppSidebar() {
   return (
     <>
       {/* Mobile: Sheet Toggle Button */}
-      <div className="md:hidden fixed top-2 left-2 z-50">
+      <div className="md:hidden fixed top-7 right-2 z-50" >
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon">
+            <Button variant="outline" size="icon">
               <Menu />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="p-0 w-64">
+          <SheetContent side="left" className="p-0 w-64 " >
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute top-2 right-2 z-30 "
+              onClick={() => setOpen(false)}
+            >
+              <X />
+            </Button>
             {sidebarContent}
-
+            <LogOutBtn/>
           </SheetContent>
+          
         </Sheet>
       </div>
 

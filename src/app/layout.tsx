@@ -46,7 +46,7 @@ export default function RootLayout({
             </NoteProvider>
           </UserProvider>
 
-          <Toaster />
+          <Toaster position="bottom-center" />
         </ThemeProvider>
       </body>
     </html>

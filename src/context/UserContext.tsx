@@ -40,10 +40,10 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       const { data: NotesData, error: NotesError } = await supabase
         .from('notes')
         .select()
-        .eq('user_id', data?.user?.id);
+        .eq('user_id', data?.user?.id)
+        .order('created_at', { ascending: false });
       if (NotesError) throw NotesError
       if (NotesData) {
-        console.log(NotesData)
         setNotes(NotesData)
       }
     } catch (error) {

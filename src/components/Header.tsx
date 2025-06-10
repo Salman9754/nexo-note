@@ -25,22 +25,22 @@ const Header = () => {
     <div className="flex gap-4">
       {loading ? (
         <div className="flex gap-2" aria-hidden="true">
-          <div className="w-24 h-9 rounded-md animate-pulse bg-neutral-200 dark:bg-neutral-700" />
-          <div className="w-20 h-9 rounded-md animate-pulse bg-neutral-200 dark:bg-neutral-700" />
+          <div className="w-24 h-9 hidden sm:block rounded-md animate-pulse bg-neutral-200 dark:bg-neutral-700" />
+          <div className="w-20 h-9 hidden sm:block rounded-md animate-pulse bg-neutral-200 dark:bg-neutral-700" />
         </div>
       ) : user ? (
-        <LogOutBtn />
+        <div className="w-24 hidden sm:block"><LogOutBtn /></div>
       ) : (
         <>
-          <Button asChild className="hidden sm:block">
+          <Button asChild className="hidden sm:block md:block">
             <Link href={'/sign-up'}>Sign Up</Link>
           </Button>
-          <Button asChild variant={"outline"}>
+          <Button asChild variant={"outline"} className="hidden sm:block md:block">
             <Link href={'/login'}>Login</Link>
           </Button>
         </>
       )}
-      <ModeToggle />
+     <div className="mx-12 sm:mx-0"> <ModeToggle /></div>
 
     </div>
   </header>;

@@ -11,6 +11,7 @@ import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import supabase from "@/supabase/client";
+import { useUser } from "@/context/UserContext";
 
 type FormData = {
     email: string;
@@ -20,6 +21,7 @@ type FormData = {
 function AuthFormLogin() {
     const [isPending, setIsPending] = useState(false);
     const router = useRouter();
+    const { getUser } = useUser()
 
     const {
         register,
@@ -43,6 +45,7 @@ function AuthFormLogin() {
             if (error) throw error
             if (data) {
                 router.replace('/')
+                getUser()
             }
         } catch (error) {
             if (error instanceof Error) {

@@ -9,19 +9,20 @@ import { useUser } from "@/context/UserContext";
 import { toast } from 'sonner'
 import { LoaderIcon } from "lucide-react";
 import { useNote } from "@/context/NoteSelectContext";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Page() {
-  const { selectedNote } = useNote();
-  const { user, getUser } = useUser()
+  const { selectedNote, setSelectedNote } = useNote();
+  const { user, getUser, loading } = useUser()
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
-  const [loading, setloading] = useState(false)
+  const [Loading, setLoading] = useState(false)
 
   const handleSave = async () => {
     if (!user) return toast.error("User not found");
 
     try {
-      setloading(true);
+      setLoading(true);
 
       if (selectedNote && selectedNote.id) {
         // Update existing note
@@ -30,7 +31,7 @@ export default function Page() {
           .update({
             title,
             note: text,
-            updated_at: new Date().toISOString(), // <-- manually set updated_at
+            updated_at: new Date().toISOString(),
           })
           .eq("id", selectedNote.id);
 
@@ -48,13 +49,14 @@ export default function Page() {
         if (error) throw error;
 
         toast.success("New note created");
+        setSelectedNote(null)
         getUser()
       }
     } catch (error) {
       if (error instanceof Error) toast.error(error.message);
       else toast.error("Something went wrong");
     } finally {
-      setloading(false);
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -71,28 +73,60 @@ export default function Page() {
 
   return (
     <>
-      <div className="flex flex-col h-full w-full p-6 space-y-4">
-        <Input
-          placeholder="Note title..."
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="text-3xl font-bold bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0"
-        />
 
-        <Textarea
-          placeholder="Start writing your note here..."
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          className="flex-1 text-base resize-none bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0"
-        />
-
-        <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={() => { setTitle(""); setText(""); }}>
-            Clear
-          </Button>
-          <Button className="w-24" onClick={handleSave} disabled={loading} >{loading ? <LoaderIcon className='animate-spin' /> : 'Save Note'}</Button>
+      {loading ? (
+        <div className="flex flex-col h-full w-full p-6 space-y-4">
+          <Skeleton className="h-10 w-1/2 rounded-md" />
+          <Skeleton className="h-[300px] w-full rounded-md" />
+          <div className="flex justify-end gap-2">
+            <Skeleton className="h-10 w-20 rounded-md" />
+            <Skeleton className="h-10 w-24 rounded-md" />
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="flex flex-col h-full w-full p-6 space-y-4">
+          <Input
+            name="title"
+            placeholder="Note title..."
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="text-xl sm:text-2xl md:text-3xl font-bold bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+          />
+
+          <Textarea
+            name="note"
+            placeholder="Start writing your note here..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            className="flex-1 text-base resize-none bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+          />
+
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setTitle("");
+                setText("");
+              }}
+            >
+              Clear
+            </Button>
+            <Button
+              className="w-24"
+              onClick={handleSave}
+              disabled={Loading || title.trim() === "" || text.trim() === ""}
+            >
+              {Loading ? (
+                <LoaderIcon className="animate-spin" />
+              ) : selectedNote && selectedNote.id ? (
+                "Update"
+              ) : (
+                "Save"
+              )}
+            </Button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
