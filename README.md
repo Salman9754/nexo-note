@@ -23,14 +23,10 @@ Built with:
 
 - 🤖 **AI-Powered Writing Assistant**
   - Summarize notes
-  - Generate content ideas
   - Auto-tag notes for organization
 - 🔍 **Search Functionality**
   - Quickly find notes by keyword
-- 📅 **Note Reminders**
-  - Set reminders or deadlines on notes
-- 🗂️ **Folders and Tags**
-  - Organize notes into custom folders or categories
+
 
 ---
 ---
