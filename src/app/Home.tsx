@@ -10,6 +10,8 @@ import { toast } from 'sonner'
 import { LoaderIcon } from "lucide-react";
 import { useNote } from "@/context/NoteSelectContext";
 import { Skeleton } from "@/components/ui/skeleton";
+import { CopilotPopup } from "@copilotkit/react-ui";
+import { useCopilotReadable } from "@copilotkit/react-core";
 
 export default function Home() {
     const { selectedNote, newNote } = useNote();
@@ -83,11 +85,42 @@ export default function Home() {
             setText("");
         }
     }, [selectedNote]);
+    useCopilotReadable({
+        description: `You are a helpful assistant whose only job is to answer questions about the user’s personal notes. Always assume every query relates directly to those notes, and never introduce outside information.
 
+Tone & Style
+- Be friendly and concise.
+- Keep answers clear and to the point—avoid unnecessary detail.
+
+Content
+- Answer using only the information found in the user’s notes.
+- If the notes don’t cover the question, politely say you don’t have enough information.
+
+Formatting
+- Reply in natural, plain text as a chat message.
+- Do not include any HTML, Markdown, code fences, or special formatting.
+- Use paragraphs only where needed; no lists or block formatting unless it clarifies your answer.
+
+Example
+User: What is React?
+Assistant: React is a JavaScript library for building user interfaces with reusable components and hooks like useState and useEffect.
+`,
+        value: notes,
+    });
 
 
     return (
         <>
+            <CopilotPopup
+
+                instructions={"You are assisting the user as best as you can. Answer in the best way possible given the data you have."}
+                labels={{
+                    title: "Nexo Ai Assistant",
+                    initial: "What do you want to ask from your notes today?",
+                }}
+
+            />
+
 
             {loading ? (
                 <div className="flex flex-col h-full w-full p-6 space-y-4">
@@ -116,7 +149,7 @@ export default function Home() {
                         className="flex-1 text-base resize-none bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0"
                     />
 
-                    <div className="flex justify-end gap-2">
+                    <div className="flex gap-2">
                         <Button
                             variant="outline"
                             onClick={() => {
