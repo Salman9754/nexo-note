@@ -23,6 +23,7 @@ function AuthFormSignup() {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors },
     } = useForm<SignupFormValues>({
         defaultValues: {
@@ -50,12 +51,13 @@ function AuthFormSignup() {
                         .insert({ name: name, email: email, user_id: userId })
                     if (userError) throw userError
                     toast.success("Signed up successfully confirm email")
+                    reset()
                 } catch (error) {
                     if (error instanceof Error) {
                         toast.error(error.message)
                     } else {
                         toast.error("Something went wrong")
-                        
+
                     }
                 }
                 finally {
