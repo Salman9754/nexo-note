@@ -111,7 +111,7 @@ Assistant: React is a JavaScript library for building user interfaces with reusa
 
     return (
         <>
-            <CopilotPopup
+            <CopilotPopup className="z-50"
 
                 instructions={"You are assisting the user as best as you can. Answer in the best way possible given the data you have."}
                 labels={{
@@ -132,7 +132,7 @@ Assistant: React is a JavaScript library for building user interfaces with reusa
                     </div>
                 </div>
             ) : (
-                <div className="flex flex-col h-full w-full p-6 space-y-4">
+                <div className="flex flex-col h-[88%] sm:h-full w-full p-6 space-y-4">
                     <Input
                         name="title"
                         placeholder="Note title..."
@@ -146,7 +146,7 @@ Assistant: React is a JavaScript library for building user interfaces with reusa
                         placeholder="Start writing your note here..."
                         value={text}
                         onChange={(e) => setText(e.target.value)}
-                        className="flex-1 text-base resize-none bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                        className=" flex-1 text-base resize-none bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0"
                     />
 
                     <div className="flex gap-2">

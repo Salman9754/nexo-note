@@ -42,7 +42,7 @@ export function AppSidebar() {
   };
 
   const sidebarContent = (
-    <SidebarContent className="custom-scrollbar pb-2">
+    <SidebarContent className="custom-scrollbar">
       <SidebarGroup>
         <SidebarGroupLabel className="mb-6 text-lg mt-8">
           {loading ? (
@@ -130,14 +130,14 @@ export function AppSidebar() {
   return (
     <>
       {/* Mobile: Sheet Toggle Button */}
-      <div className="md:hidden fixed top-7 right-2 z-50">
+      <div className="md:hidden fixed top-7 right-2 z-30">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon">
               <Menu />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="p-0 w-64 h-screen overflow-y-auto custom-scrollbar">
+          <SheetContent side="left" className="p-0 w-64 overflow-y-auto custom-scrollbar">
             <div className="relative h-full">
               <Button
                 variant="outline"
@@ -148,7 +148,7 @@ export function AppSidebar() {
                 <X />
               </Button>
               <div className="h-full overflow-y-auto custom-scrollbar">{sidebarContent}</div>
-              <div className="absolute bottom-6 right-8 z-40">
+              <div className="absolute bottom-3 right-5 z-40">
                 <LogOutBtn isMobile={true} />
               </div>
             </div>
