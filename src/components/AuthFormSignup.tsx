@@ -136,7 +136,7 @@ function AuthFormSignup() {
                 </Button>
 
                 <p className="text-xs">
-                    Already have an account?{" "}
+                    "Already have an account?"{" "}
                     <Link
                         href="/login"
                         className={`text-blue-500 underline ${isPending ? "pointer-events-none opacity-50" : ""}`}
